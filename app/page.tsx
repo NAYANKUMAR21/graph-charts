@@ -1,102 +1,143 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import Link from "next/link";
+// import { parseCSV } from "@/utils/data-utils";
+// import { sampleData } from "@/data/sample-data";
+import { parseCSV } from "@/utils/data-utils";
+import { sampleData } from "@/data/sample-data";
+
+export default function Dashboard() {
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    // Parse the CSV data and store it in localStorage
+    const parsedData = parseCSV(sampleData);
+    localStorage.setItem("invoiceData", JSON.stringify(parsedData));
+    setIsDataLoaded(true);
+  }, []);
+
+  const chartTypes = [
+    {
+      name: "Bar Chart",
+      path: "/charts/bar",
+      description: "Compare sales by product line",
+    },
+    {
+      name: "Line Chart",
+      path: "/charts/line",
+      description: "Track sales trends over time",
+    },
+    {
+      name: "Pie Chart",
+      path: "/charts/pie",
+      description: "View distribution by customer type",
+    },
+    {
+      name: "Area Chart",
+      path: "/charts/area",
+      description: "Analyze sales by gender over time",
+    },
+    {
+      name: "Scatter Plot",
+      path: "/charts/scatter",
+      description: "Explore relationship between unit price and quantity",
+    },
+    {
+      name: "Column Chart",
+      path: "/charts/column",
+      description: "Compare sales by city and gender",
+    },
+    {
+      name: "Donut Chart",
+      path: "/charts/donut",
+      description: "Visualize payment method distribution",
+    },
+    {
+      name: "Radar Chart",
+      path: "/charts/radar",
+      description: "Evaluate product performance across multiple metrics",
+    },
+    {
+      name: "Bubble Chart",
+      path: "/charts/bubble",
+      description: "Analyze product performance by branch",
+    },
+    {
+      name: "Heat Map",
+      path: "/charts/heatmap",
+      description: "View sales distribution across product lines and branches",
+    },
+  ];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white">
+      {/* Header */}
+      <header className="py-10">
+        <h1 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+          ExtJS Data Visualization Dashboard
+        </h1>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Main Content */}
+      <main className="flex-1 flex justify-center items-start px-6 md:px-10 py-10">
+        <div className="w-full max-w-7xl">
+          {/* Welcome Section */}
+          <section className="mb-16 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Welcome to Your Invoice Insights
+            </h2>
+            <p className="text-lg md:text-xl text-gray-300">
+              Dive into dynamic charts and explore your data with interactive
+              visualizations.
+            </p>
+          </section>
+
+          {/* Charts Section */}
+          {!isDataLoaded ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="text-2xl font-semibold animate-pulse text-blue-400">
+                Loading data...
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8">
+              {chartTypes.map((chart) => (
+                <Link href={chart.path} key={chart.path}>
+                  <div className="h-full p-6 bg-white/10 backdrop-blur-lg hover:bg-white/20 rounded-3xl shadow-2xl transition-all hover:scale-105 cursor-pointer flex flex-col justify-between">
+                    <h3 className="text-2xl font-bold mb-4 text-blue-300 break-words">
+                      {chart.name}
+                    </h3>
+                    <p className="text-gray-300 break-words">
+                      {chart.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* About Section */}
+          <section className="mt-10 bg-white/10 backdrop-blur-lg p-8 md:p-10 rounded-3xl shadow-2xl text-center">
+            <h2 className="text-3xl font-bold mb-6 text-purple-300">
+              About This Dashboard
+            </h2>
+            <p className="text-lg text-gray-300 mb-4">
+              Powered by ExtJS and Next.js, this dashboard blends Vercel's sleek
+              UI philosophy with powerful data visualizations.
+            </p>
+            <p className="text-lg text-gray-300">
+              Interact, analyze, and gain actionable insights from your invoice
+              datasets, with detailed hover information and smooth modals for
+              deeper dives.
+            </p>
+          </section>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="py-6 text-center text-sm text-gray-400">
+        ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
       </footer>
     </div>
   );
