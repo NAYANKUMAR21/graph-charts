@@ -18,6 +18,7 @@ export default function ChartContainer({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<any>(null);
 
+  // Render the chart when renderChart changes or on mount
   useEffect(() => {
     if (chartRef.current) {
       // Clear any existing chart
@@ -25,27 +26,32 @@ export default function ChartContainer({
 
       // Render the new chart
       renderChart(chartRef.current);
-
-      // Set up global event listener for chart item clicks
-      window.addEventListener("chartItemClick", ((e: CustomEvent) => {
-        setModalData(e.detail);
-        setIsModalOpen(true);
-      }) as EventListener);
-
-      return () => {
-        window.removeEventListener("chartItemClick", ((e: CustomEvent) => {
-          setModalData(e.detail);
-          setIsModalOpen(true);
-        }) as EventListener);
-      };
     }
   }, [renderChart]);
 
-  return (
-    <div className="graph-container">
-      <h2 className="chart-title">{title}</h2>
-      <div ref={chartRef} style={{ width: "100%", height: "100%" }}></div>
+  // Set up global event listener for chart item clicks
+  useEffect(() => {
+    const handleChartClick = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setModalData(customEvent.detail);
+      setIsModalOpen(true);
+    };
 
+    window.addEventListener("chartItemClick", handleChartClick);
+    return () => window.removeEventListener("chartItemClick", handleChartClick);
+  }, []);
+
+  return (
+    <div className="w-full  border-amber-100">
+      <h2 className="text-center text-white text-2xl mb-10">{title}</h2>
+
+      {/* Chart container with defined height */}
+      <div
+        ref={chartRef}
+        className="w-full h-[500px] border-amber-50 text-white shadow rounded"
+      ></div>
+
+      {/* Modal for chart item details */}
       <ChartModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

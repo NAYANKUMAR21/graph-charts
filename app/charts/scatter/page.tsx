@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ChartContainer from "@/components/chart-container";
 import { type InvoiceData, getColorForIndex } from "@/utils/data-utils";
+import { Button } from "@/components/ui/button";
 
 export default function ScatterPlotPage() {
   const [data, setData] = useState<InvoiceData[]>([]);
@@ -53,7 +54,7 @@ export default function ScatterPlotPage() {
     yAxis.setAttribute("x1", "50");
     yAxis.setAttribute("y1", "0");
     yAxis.setAttribute("x2", "50");
-    yAxis.setAttribute("y2", chartHeight);
+    yAxis.setAttribute("y2", "" + chartHeight);
     yAxis.setAttribute("stroke", "white");
     yAxis.setAttribute("stroke-width", "2");
     svg.appendChild(yAxis);
@@ -64,9 +65,9 @@ export default function ScatterPlotPage() {
       "line"
     );
     xAxis.setAttribute("x1", "50");
-    xAxis.setAttribute("y1", chartHeight);
-    xAxis.setAttribute("x2", chartWidth + 50);
-    xAxis.setAttribute("y2", chartHeight);
+    xAxis.setAttribute("y1", "" + chartHeight);
+    xAxis.setAttribute("x2", "" + chartHeight + 50);
+    xAxis.setAttribute("y2", "" + chartHeight);
     xAxis.setAttribute("stroke", "white");
     xAxis.setAttribute("stroke-width", "2");
     svg.appendChild(xAxis);
@@ -278,49 +279,53 @@ export default function ScatterPlotPage() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h1>Scatter Plot Visualization</h1>
-        <Link href="/" className="nav-button">
-          Back to Dashboard
-        </Link>
-      </div>
+    <div className="text-white">
+      <div>
+        <div className="text-center mt-10">
+          <h1 className="text-4xl ">Scatter Plot Visualization</h1>
+          <Link href="/">
+            <Button className="bg-blue-400 mt-10">Back to Dashboard</Button>
+          </Link>
+        </div>
 
-      <div className="content">
-        {isLoading ? (
-          <div>Loading data...</div>
-        ) : (
-          <>
-            <ChartContainer
-              title="Unit Price vs. Quantity by Product Line"
-              chartType="scatter"
-              renderChart={renderScatterPlot}
-            />
+        <div className="mt-10">
+          {isLoading ? (
+            <div>Loading data...</div>
+          ) : (
+            <>
+              <div>
+                <ChartContainer
+                  title="Unit Price vs. Quantity by Product Line"
+                  chartType="scatter"
+                  renderChart={renderScatterPlot}
+                />
+              </div>
 
-            <div className="p-4 bg-[#111] rounded-lg mb-4">
-              <h3 className="text-xl font-semibold mb-2">
-                About Scatter Plots
-              </h3>
-              <p>
-                Scatter plots are ideal for showing the relationship between two
-                variables. This visualization displays the relationship between
-                unit price and quantity for each transaction.
-              </p>
-              <p className="mt-2">
-                Each point represents a transaction, with the color indicating
-                the product line and the size representing the total sale
-                amount. Hover over any point to see details, or click for more
-                information.
-              </p>
-            </div>
-          </>
-        )}
-      </div>
+              <div className="p-4 bg-[#111] rounded-lg mb-4 mt-60">
+                <h3 className="text-xl font-semibold mb-2">
+                  About Scatter Plots
+                </h3>
+                <p>
+                  Scatter plots are ideal for showing the relationship between
+                  two variables. This visualization displays the relationship
+                  between unit price and quantity for each transaction.
+                </p>
+                <p className="mt-2">
+                  Each point represents a transaction, with the color indicating
+                  the product line and the size representing the total sale
+                  amount. Hover over any point to see details, or click for more
+                  information.
+                </p>
+              </div>
+            </>
+          )}
+        </div>
 
-      <div className="footer">
-        <p>
-          ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
-        </p>
+        <div className="text-center mt-10">
+          <p>
+            ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
+          </p>
+        </div>
       </div>
     </div>
   );

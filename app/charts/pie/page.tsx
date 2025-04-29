@@ -15,7 +15,6 @@ export default function PieChartPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Retrieve the parsed data from localStorage
     const storedData = localStorage.getItem("invoiceData");
     if (storedData) {
       setData(JSON.parse(storedData));
@@ -26,10 +25,10 @@ export default function PieChartPage() {
   const renderPieChart = (container: HTMLDivElement) => {
     if (!data.length) return;
 
-    // Group data by customer type
-    const groupedData = groupDataByField(data, "customerType");
+    // Clear container first (important if re-rendering)
+    container.innerHTML = "";
 
-    // Calculate total sales for each customer type
+    const groupedData = groupDataByField(data, "customerType");
     const totalSales = calculateSum(data, "total");
     const chartData = Object.entries(groupedData)
       .map(([customerType, items], index) => {
@@ -43,27 +42,23 @@ export default function PieChartPage() {
       })
       .sort((a, b) => b.sales - a.sales);
 
-    // Create the chart using vanilla JS/DOM
     const chartSize =
       Math.min(container.clientWidth, container.clientHeight) - 60;
     const centerX = chartSize / 2 + 30;
     const centerY = chartSize / 2 + 30;
     const radius = chartSize / 2 - 20;
 
-    // Create SVG element
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", `0 0 ${chartSize + 60} ${chartSize + 60}`);
     container.appendChild(svg);
 
-    // Calculate pie slices
     let startAngle = 0;
     chartData.forEach((item) => {
       const sliceAngle = (item.percentage / 100) * 2 * Math.PI;
       const endAngle = startAngle + sliceAngle;
 
-      // Calculate arc path
       const x1 = centerX + radius * Math.cos(startAngle);
       const y1 = centerY + radius * Math.sin(startAngle);
       const x2 = centerX + radius * Math.cos(endAngle);
@@ -78,80 +73,37 @@ export default function PieChartPage() {
         "Z",
       ].join(" ");
 
-      // Create pie slice
       const slice = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "path"
       );
       slice.setAttribute("d", pathData);
       slice.setAttribute("fill", item.color);
-      slice.setAttribute("stroke", "#000");
-      slice.setAttribute("stroke-width", "1");
-      slice.setAttribute("data-customer-type", item.customerType);
-      slice.setAttribute("data-value", item.sales.toString());
-      slice.setAttribute("data-percentage", item.percentage.toString());
+      slice.style.transition = "transform 0.3s, stroke 0.3s";
 
-      // Add hover effect
       slice.addEventListener("mouseover", () => {
-        // Pull out slice slightly
         const midAngle = startAngle + sliceAngle / 2;
-        const pullDistance = 10;
+        const pullDistance = 8;
         const translateX = pullDistance * Math.cos(midAngle);
         const translateY = pullDistance * Math.sin(midAngle);
 
         slice.setAttribute(
           "transform",
-          `translate(${translateX} ${translateY})`
+          `translate(${translateX}, ${translateY})`
         );
         slice.setAttribute("stroke", "white");
         slice.setAttribute("stroke-width", "2");
-
-        // Show tooltip
-        const tooltip = document.createElement("div");
-        tooltip.className = "tooltip";
-        tooltip.innerHTML = `
-          <strong>${item.customerType}</strong><br>
-          Sales: $${item.sales.toFixed(2)}<br>
-          Percentage: ${item.percentage.toFixed(2)}%
-        `;
-
-        const tooltipX = centerX + (radius + 20) * Math.cos(midAngle);
-        const tooltipY = centerY + (radius + 20) * Math.sin(midAngle);
-
-        tooltip.style.left = `${tooltipX}px`;
-        tooltip.style.top = `${tooltipY}px`;
-        container.appendChild(tooltip);
       });
 
       slice.addEventListener("mouseout", () => {
         slice.removeAttribute("transform");
-        slice.setAttribute("stroke", "#000");
-        slice.setAttribute("stroke-width", "1");
-
-        // Remove tooltip
-        const tooltip = container.querySelector(".tooltip");
-        if (tooltip) {
-          container.removeChild(tooltip);
-        }
-      });
-
-      // Add click event for modal
-      slice.addEventListener("click", () => {
-        const event = new CustomEvent("chartItemClick", {
-          detail: {
-            category: item.customerType,
-            value: item.sales,
-            percentage: item.percentage,
-          },
-        });
-        window.dispatchEvent(event);
+        slice.setAttribute("stroke", "none");
       });
 
       svg.appendChild(slice);
 
-      // Add label
       const midAngle = startAngle + sliceAngle / 2;
-      const labelRadius = radius * 0.7;
+      const labelRadius = radius * 0.65;
       const labelX = centerX + labelRadius * Math.cos(midAngle);
       const labelY = centerY + labelRadius * Math.sin(midAngle);
 
@@ -162,42 +114,41 @@ export default function PieChartPage() {
       label.setAttribute("x", labelX.toString());
       label.setAttribute("y", labelY.toString());
       label.setAttribute("text-anchor", "middle");
+      label.setAttribute("alignment-baseline", "middle");
       label.setAttribute("fill", "white");
-      label.setAttribute("font-size", "14");
-      label.setAttribute("font-weight", "bold");
+      label.setAttribute("font-size", "12");
+      label.setAttribute("font-weight", "600");
       label.textContent = `${Math.round(item.percentage)}%`;
       svg.appendChild(label);
 
       startAngle = endAngle;
     });
 
-    // Add legend
     const legend = document.createElement("div");
-    legend.className = "chart-legend";
-    legend.style.position = "absolute";
-    legend.style.bottom = "10px";
-    legend.style.left = "50%";
-    legend.style.transform = "translateX(-50%)";
+    legend.style.marginTop = "20px";
     legend.style.display = "flex";
-    legend.style.justifyContent = "center";
     legend.style.flexWrap = "wrap";
+    legend.style.justifyContent = "center";
     legend.style.gap = "10px";
 
     chartData.forEach((item) => {
       const legendItem = document.createElement("div");
-      legendItem.className = "legend-item";
       legendItem.style.display = "flex";
       legendItem.style.alignItems = "center";
-      legendItem.style.marginRight = "15px";
+      legendItem.style.background = "#1f1f1f";
+      legendItem.style.padding = "6px 10px";
+      legendItem.style.borderRadius = "6px";
 
       const colorBox = document.createElement("div");
-      colorBox.className = "legend-color";
       colorBox.style.width = "12px";
       colorBox.style.height = "12px";
+      colorBox.style.marginRight = "8px";
       colorBox.style.backgroundColor = item.color;
-      colorBox.style.marginRight = "5px";
+      colorBox.style.borderRadius = "2px";
 
       const label = document.createElement("span");
+      label.style.color = "#ccc";
+      label.style.fontSize = "13px";
       label.textContent = `${item.customerType}: $${item.sales.toFixed(2)}`;
 
       legendItem.appendChild(colorBox);
@@ -209,14 +160,25 @@ export default function PieChartPage() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h1>Pie Chart Visualization</h1>
-        <Link href="/" className="nav-button">
+    <div className="text-white">
+      <div
+        className="header"
+        style={{ marginBottom: "2rem", textAlign: "center" }}
+      >
+        <h1 className="text-3xl font-bold mb-4">Pie Chart Visualization</h1>
+        <Link
+          href="/"
+          className="nav-button"
+          style={{
+            background: "#3b82f6",
+            padding: "0.5rem 1rem",
+            borderRadius: "6px",
+            color: "white",
+          }}
+        >
           Back to Dashboard
         </Link>
       </div>
-
       <div className="content">
         {isLoading ? (
           <div>Loading data...</div>
@@ -228,24 +190,27 @@ export default function PieChartPage() {
               renderChart={renderPieChart}
             />
 
-            <div className="p-4 bg-[#111] rounded-lg mb-4">
-              <h3 className="text-xl font-semibold mb-2">About Pie Charts</h3>
-              <p>
+            <div className="p-6 bg-[#1f2937] rounded-lg mt-8">
+              <h3 className="text-2xl font-semibold mb-3">About Pie Charts</h3>
+              <p className="text-gray-300">
                 Pie charts are ideal for showing the proportion of parts to a
                 whole. This visualization displays the distribution of sales
                 across different customer types.
               </p>
-              <p className="mt-2">
+              <p className="text-gray-400 mt-2">
                 Each slice represents a customer type, with the size
                 proportional to its percentage of total sales. Hover over any
-                slice to see details, or click for more information.
+                slice to see details.
               </p>
             </div>
           </>
         )}
       </div>
 
-      <div className="footer">
+      <div
+        className="footer"
+        style={{ textAlign: "center", marginTop: "4rem", color: "#94a3b8" }}
+      >
         <p>
           ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
         </p>

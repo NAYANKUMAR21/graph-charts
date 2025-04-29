@@ -55,7 +55,7 @@ export default function SalesLineChart() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-gray-900 text-white p-8 flex flex-col">
       <div className="max-w-6xl w-full mx-auto flex flex-col gap-8">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -79,6 +79,36 @@ export default function SalesLineChart() {
             <h2 className="text-2xl font-bold mb-4 text-blue-300">
               Daily Sales Trend
             </h2>
+            {selectedPoint !== null && (
+              <div className="mb-6 p-4 bg-slate-800 rounded-lg border border-blue-500/30">
+                <div className="grid grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-gray-400 text-sm">Date</p>
+                    <p className="text-white text-lg font-bold">
+                      {formatDate(data[selectedPoint].date)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm">Total Sales</p>
+                    <p className="text-white text-lg font-bold">
+                      ${data[selectedPoint].total.toLocaleString()}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm">Transactions</p>
+                    <p className="text-white text-lg font-bold">
+                      {data[selectedPoint].count}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm">Avg. Transaction</p>
+                    <p className="text-white text-lg font-bold">
+                      ${data[selectedPoint].avgTransaction.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="h-96 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
@@ -130,6 +160,7 @@ export default function SalesLineChart() {
                         ? "Transactions"
                         : "Avg. Transaction",
                     ]}
+                    position={{ y: 0 }}
                     contentStyle={{
                       backgroundColor: "#1e293b",
                       border: "none",
@@ -168,33 +199,6 @@ export default function SalesLineChart() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            {selectedPoint !== null && (
-              <div className="mt-4 p-4 bg-slate-800 rounded-lg border border-blue-500/30">
-                <h3 className="font-semibold text-blue-300">
-                  Date: {formatDate(data[selectedPoint].date)}
-                </h3>
-                <div className="grid grid-cols-3 gap-4 mt-2">
-                  <div>
-                    <p className="text-gray-400 text-sm">Total Sales</p>
-                    <p className="text-white text-lg font-bold">
-                      ${data[selectedPoint].total.toLocaleString()}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Transactions</p>
-                    <p className="text-white text-lg font-bold">
-                      {data[selectedPoint].count}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Avg. Transaction</p>
-                    <p className="text-white text-lg font-bold">
-                      ${data[selectedPoint].avgTransaction.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )}
 

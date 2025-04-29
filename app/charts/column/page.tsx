@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ChartContainer from "@/components/chart-container";
 import { type InvoiceData, getColorForIndex } from "@/utils/data-utils";
+import { Button } from "@/components/ui/button";
 
 export default function ColumnChartPage() {
   const [data, setData] = useState<InvoiceData[]>([]);
@@ -273,11 +274,11 @@ export default function ColumnChartPage() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h1>Column Chart Visualization</h1>
-        <Link href="/" className="nav-button">
-          Back to Dashboard
+    <div className="text-white">
+      <div className="text-center mt-10">
+        <h1 className="text-4xl ">Scatter Plot Visualization</h1>
+        <Link href="/">
+          <Button className="bg-blue-400 mt-10">Back to Dashboard</Button>
         </Link>
       </div>
 
@@ -292,7 +293,7 @@ export default function ColumnChartPage() {
               renderChart={renderColumnChart}
             />
 
-            <div className="p-4 bg-[#111] rounded-lg mb-4">
+            <div className="p-4 bg-[#111] rounded-lg mb-4 mt-60">
               <h3 className="text-xl font-semibold mb-2">
                 About Column Charts
               </h3>
@@ -311,7 +312,7 @@ export default function ColumnChartPage() {
         )}
       </div>
 
-      <div className="footer">
+      <div className="text-center mt-10">
         <p>
           ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
         </p>

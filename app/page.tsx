@@ -71,7 +71,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-900 via-black to-gray-900 text-white">
       {/* Header */}
       <header className="py-10">
         <h1 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">

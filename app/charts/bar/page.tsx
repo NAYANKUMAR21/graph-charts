@@ -29,7 +29,7 @@ export default function SalesBarChart() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-8 flex flex-col">
+    <div className="min-h-screen  text-white p-8 flex flex-col">
       <div className="max-w-6xl w-full mx-auto flex flex-col gap-8">
         {/* Header */}
         <div className="flex justify-between items-center">

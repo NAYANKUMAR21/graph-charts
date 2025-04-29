@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ChartContainer from "@/components/chart-container";
 import { type InvoiceData, calculateSum } from "@/utils/data-utils";
+import { Button } from "@/components/ui/button";
 
 export default function HeatMapPage() {
   const [data, setData] = useState<InvoiceData[]>([]);
@@ -325,11 +326,11 @@ export default function HeatMapPage() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h1>Heat Map Visualization</h1>
-        <Link href="/" className="nav-button">
-          Back to Dashboard
+    <div className="text-white">
+      <div className="text-center mt-10">
+        <h1 className="text-4xl ">Scatter Plot Visualization</h1>
+        <Link href="/">
+          <Button className="bg-blue-400 mt-10">Back to Dashboard</Button>
         </Link>
       </div>
 
@@ -344,7 +345,7 @@ export default function HeatMapPage() {
               renderChart={renderHeatMap}
             />
 
-            <div className="p-4 bg-[#111] rounded-lg mb-4">
+            <div className="p-4 bg-[#111] rounded-lg mb-4 mt-60">
               <h3 className="text-xl font-semibold mb-2">About Heat Maps</h3>
               <p>
                 Heat maps use color to represent data values, making it easy to
@@ -362,7 +363,7 @@ export default function HeatMapPage() {
         )}
       </div>
 
-      <div className="footer">
+      <div className="text-center mt-10 text-gray-500">
         <p>
           ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
         </p>

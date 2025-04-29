@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ChartContainer from "@/components/chart-container";
 import { type InvoiceData, getColorForIndex } from "@/utils/data-utils";
+import { Button } from "@/components/ui/button";
 
 export default function AreaChartPage() {
   const [data, setData] = useState<InvoiceData[]>([]);
@@ -345,46 +346,79 @@ export default function AreaChartPage() {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="header">
-        <h1>Area Chart Visualization</h1>
-        <Link href="/" className="nav-button">
-          Back to Dashboard
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-gray-900 flex flex-col items-center p-6">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-5xl font-extrabold text-white mb-6 drop-shadow-lg">
+          Sales by Gender Visualization
+        </h1>
+        <Link href="/">
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl shadow-lg transition">
+            Back to Dashboard
+          </Button>
         </Link>
       </div>
 
-      <div className="content">
+      {/* Content Section */}
+      <div className="w-full max-w-6xl  bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
         {isLoading ? (
-          <div>Loading data...</div>
+          <div className="text-center text-gray-300 text-xl">
+            Loading data...
+          </div>
         ) : (
           <>
-            <ChartContainer
-              title="Sales by Gender Over Time"
-              chartType="area"
-              renderChart={renderAreaChart}
-            />
+            {/* Chart Section */}
+            <div className="flex flex-col md:flex-row items-center justify-center ">
+              {/* Chart */}
+              <div className="w-full md:w-2/3 p-4  bg-opacity-20 rounded-xl shadow-lg">
+                <ChartContainer
+                  title="Sales by Gender Over Time"
+                  chartType="area"
+                  renderChart={renderAreaChart}
+                />
+              </div>
 
-            <div className="p-4 bg-[#111] rounded-lg mb-4">
-              <h3 className="text-xl font-semibold mb-2">About Area Charts</h3>
-              <p>
-                Area charts are excellent for showing the volume of data over
-                time. This visualization displays sales trends by gender across
-                different dates.
+              </div>
+              {/* Quantities Section */}
+              {/* <div className="w-full md:w-1/3 flex flex-col items-center justify-center p-6 bg-opacity-20 rounded-xl shadow-lg">
+                <h2 className="text-2xl font-semibold text-white mb-6">
+                  Total Sales
+                </h2>
+                <div className="space-y-6 text-lg text-white">
+                  <div className="flex items-center justify-between w-full">
+                    <span>👨 Male Sales:</span>
+                    <span className="font-bold text-green-400">1245</span>
+                  </div>
+                  <div className="flex items-center justify-between w-full">
+                    <span>👩 Female Sales:</span>
+                    <span className="font-bold text-pink-400">1350</span>
+                  </div>
+                </div>
+              </div> */}
+
+            {/* About Area Charts */}
+            <div className="mt-10 p-6  bg-opacity-20 rounded-xl shadow-lg">
+              <h3 className="text-3xl font-semibold text-white mb-4">
+                About Area Charts
+              </h3>
+              <p className="text-gray-300 leading-relaxed">
+                Area charts are ideal for showing cumulative quantities over
+                time. In this visualization, sales trends are separated by
+                gender to better understand contributions at different periods.
               </p>
-              <p className="mt-2">
-                The stacked areas represent the contribution of each gender to
-                the total sales. Hover over any data point to see details, or
-                click for more information.
+              <p className="text-gray-300 leading-relaxed mt-4">
+                The stacked areas represent how male and female sales add up to
+                the total. Hover over points for insights, or click on data
+                points for detailed analysis.
               </p>
             </div>
           </>
         )}
       </div>
 
-      <div className="footer">
-        <p>
-          ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
-        </p>
+      {/* Footer */}
+      <div className="mt-12 text-gray-400 text-sm">
+        ExtJS Data Visualization Dashboard &copy; {new Date().getFullYear()}
       </div>
     </div>
   );

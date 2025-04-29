@@ -18,17 +18,12 @@ export default function ChartModal({
   if (!isOpen) return null;
 
   return (
-    <div className="modal" onClick={onClose}>
+    <div className="text-white" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>{title}</h2>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
+        <div className="w-[500px]"></div>
         <div className="modal-body">
           <div className="p-4">
-            <h3 className="text-lg font-semibold mb-2">Details</h3>
+            <h3 className="text-lg font-semibold mb-2">Details : {title}</h3>
             {chartType === "bar" && (
               <div>
                 <p>
@@ -109,13 +104,13 @@ export default function ChartModal({
               chartType !== "pie" &&
               chartType !== "line" &&
               chartType !== "area" && (
-                <pre className="bg-gray-800 p-3 rounded overflow-auto max-h-60">
+                <pre className="bg-gray-800 p-4 rounded overflow-auto max-h-60 ">
                   {JSON.stringify(data, null, 2)}
                 </pre>
               )}
           </div>
         </div>
-        <div className="modal-footer">
+        <div className="p-4">
           <button
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
             onClick={onClose}
