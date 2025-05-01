@@ -1,9 +1,6 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
-// import { parseCSV } from "@/utils/data-utils";
-// import { sampleData } from "@/data/sample-data";
 import { parseCSV } from "@/utils/data-utils";
 import { sampleData } from "@/data/sample-data";
 
